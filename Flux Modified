@@ -996,7 +996,7 @@ function Flux:Window(text, bottom,mainclr,toclose)
 			end
 			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
 			function DropFunc:Update(Toggle)
-				Click(not Toggle)
+				Click(Toggle)
 			end
 			return DropFunc
 		end
