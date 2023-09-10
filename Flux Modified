@@ -857,7 +857,7 @@ function Flux:Window(text, bottom,mainclr,toclose)
 			ArrowIco.Image = "http://www.roblox.com/asset/?id=6034818372"
 			ArrowIco.ImageTransparency = .3
 
-			function Click(Boolean)
+			local function Click(Boolean)
 				if Boolean == false then
 					ToggleCircle:TweenPosition(UDim2.new(0.37, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, true)
 					TweenService:Create(
