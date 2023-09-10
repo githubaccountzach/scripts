@@ -728,6 +728,7 @@ function Flux:Window(text, bottom,mainclr,toclose)
 			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
 		end
 		function ContainerContent:Toggle(text, desc,default, callback)
+			local DropFunc = {}
 			local ToggleDescToggled = false
 			local Toggled = false
 			if desc == "" then
@@ -856,6 +857,24 @@ function Flux:Window(text, bottom,mainclr,toclose)
 			ArrowIco.Image = "http://www.roblox.com/asset/?id=6034818372"
 			ArrowIco.ImageTransparency = .3
 
+			function Click(Boolean)
+				if Boolean == false then
+					ToggleCircle:TweenPosition(UDim2.new(0.37, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, true)
+					TweenService:Create(
+						ToggleCircle,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 =PresetColor}
+					):Play()
+				else
+					ToggleCircle:TweenPosition(UDim2.new(0, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, true)
+					TweenService:Create(
+						ToggleCircle,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(255,255,255)}
+					):Play()
+				end
+			end
+
 			Toggle.MouseEnter:Connect(function()
 				TweenService:Create(
 					Title,
@@ -873,21 +892,7 @@ function Flux:Window(text, bottom,mainclr,toclose)
 			end)
 
 			Toggle.MouseButton1Click:Connect(function()
-				if Toggled == false then
-					ToggleCircle:TweenPosition(UDim2.new(0.37, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, true)
-					TweenService:Create(
-						ToggleCircle,
-						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-						{BackgroundColor3 =PresetColor}
-					):Play()
-				else
-					ToggleCircle:TweenPosition(UDim2.new(0, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, true)
-					TweenService:Create(
-						ToggleCircle,
-						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-						{BackgroundColor3 = Color3.fromRGB(255,255,255)}
-					):Play()
-				end
+				Click(Toggled)
 				Toggled = not Toggled
 				pcall(callback, Toggled)
 			end)
@@ -995,6 +1000,10 @@ function Flux:Window(text, bottom,mainclr,toclose)
 				pcall(callback, Toggled)
 			end
 			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+			function DropFunc:Update(Boolean)
+				Click(Boolean)
+			end
+			return DropFunc
 		end
 
 		function ContainerContent:Slider(text,desc,min,max,start,callback)
