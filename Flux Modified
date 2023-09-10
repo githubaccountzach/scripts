@@ -990,12 +990,7 @@ function Flux:Window(text, bottom,mainclr,toclose)
 				ToggleDescToggled = not ToggleDescToggled
 			end)
 			if default == true then
-				ToggleCircle:TweenPosition(UDim2.new(0.37, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, true)
-				TweenService:Create(
-					ToggleCircle,
-					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-					{BackgroundColor3 =PresetColor}
-				):Play()
+				Click(default)
 				Toggled = not Toggled
 				pcall(callback, Toggled)
 			end
