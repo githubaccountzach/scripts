@@ -79,15 +79,14 @@ function CreateVM()
             Gyro.CFrame = CoordinateFrame
             Velocity.Velocity = Vector3.new(0, CoordinateFrame.LookVector.Unit.Y, 0) * 100
         end
-        Track:Stop()
-    end)
-    VM.Deactivated:Connect(function()
-        Activated = false
         Velocity.Velocity = Vector3.new(0, 0, 0)
         Velocity.Parent = nil
         Gyro.Parent = nil
         Track:Stop()
-        Sound:Pause()
+        Sound.Playing = false
+    end)
+    VM.Deactivated:Connect(function()
+        Activated = false
     end)
     VM.Equipped:Connect(function()
         if Humanoid.Health > 0 then
@@ -96,8 +95,6 @@ function CreateVM()
         end
     end)
     VM.Unequipped:Connect(function()
-        Velocity.Parent = nil
-        Gyro.Parent = nil
         Activated = false
     end)
     task.spawn(function()
