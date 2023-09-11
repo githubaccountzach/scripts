@@ -1,0 +1,121 @@
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local Players = game:GetService('Players')
+local HttpService = game:GetService('HttpService')
+
+local Player = Players.LocalPlayer
+local Character = Player.Character
+local Camera = workspace.CurrentCamera
+
+local EqualizingForce = 196 + 2 / 3
+local Gravity = 0.8
+
+function RecursiveGetLift(Parent)
+    local Mass = 0
+    local Head = Character:FindFirstChild('Head')
+    for i, v in pairs(Parent:GetChildren()) do
+        if v:IsA('BasePart') then
+            if Head and (v.Position - Head.Position).Magnitude < 10 then
+                Mass += v:GetMass() * EqualizingForce
+            else
+                Mass += v:GetMass() * EqualizingForce * Gravity
+            end
+        end
+        Mass += RecursiveGetLift(v)
+    end
+    return Mass
+end
+
+function CreateVM()
+    local VM = Instance.new('Tool', Player.Backpack)
+    VM.Name = HttpService:GenerateGUID(false)
+    VM.TextureId = 'rbxassetid://6300212134'
+    VM.ToolTip = 'Cheater...'
+    VM.CanBeDropped = false
+    VM.RequiresHandle = false
+    local Humanoid = Character:WaitForChild('Humanoid')
+    local Part = Instance.new('Part', VM)
+    Part.Name = 'yes'
+    Part.Locked = true
+    Part.Size = Vector3.new(0.05, 0.05, 0.05)
+    Part.CanCollide = false
+    Part.CollisionGroup = 'Item'
+    Part.Anchored = true
+    Part.CustomPhysicalProperties = PhysicalProperties.new(0.01, 0.3, 0.5, 1, 1)
+    Part.Massless = true
+    local Sound = Instance.new('Sound', Part)
+    Sound.Name = 'Thrusting'
+    Sound.SoundId = 'rbxassetid://391784935'
+    Sound.Looped = true
+    Sound.Volume = 0.3
+    local Mesh = Instance.new('BlockMesh', Part)
+    Mesh.Offset = Vector3.new(0, 10000, 0)
+    Mesh.Scale = Vector3.new(0, 0, 0)
+    local Animation = Instance.new('Animation', VM)
+    Animation.Name = 'StandStill'
+    Animation.AnimationId = 'rbxassetid://9105888138'
+    local Track = Humanoid:LoadAnimation(Animation)
+    local Velocity = Instance.new('BodyVelocity')
+    Velocity.Velocity = Vector3.new(0, 0, 0)
+    local Gyro = Instance.new('BodyGyro')
+    Gyro.P = 20000
+    Gyro.D = 8000
+    Gyro.MaxTorque = Vector3.new(20000, 20000, 20000)
+    local Activated = false
+    VM.Activated:Connect(function()
+        if Activated then
+            return
+        end
+        Activated = true
+        Velocity.Parent = Character.Torso
+        Gyro.Parent = Character.Torso
+        Track:Play()
+        Track:AdjustSpeed(2.5)
+        Sound:Play()
+        while Activated and wait() do
+            local CoordinateFrame = Camera.CoordinateFrame
+            Gyro.CFrame = CoordinateFrame
+            Velocity.Velocity = Vector3.new(0, CoordinateFrame.LookVector.Unit.Y, 0) * 100
+        end
+        Track:Stop()
+    end)
+    VM.Deactivated:Connect(function()
+        Activated = false
+        Velocity.Velocity = Vector3.new(0, 0, 0)
+        Velocity.Parent = nil
+        Gyro.Parent = nil
+        Track:Stop()
+        Sound.Playing = false
+    end)
+    VM.Equipped:Connect(function()
+        if Humanoid.Health > 0 then
+            Velocity.P = RecursiveGetLift(Character) * 10
+            Velocity.MaxForce = Vector3.new(0, Velocity.P, 0)
+        end
+    end)
+    VM.Unequipped:Connect(function()
+        Velocity.Parent = nil
+        Gyro.Parent = nil
+        Activated = false
+    end)
+    task.spawn(function()
+        Character:WaitForChild('HumanoidRootPart')
+        while wait(0.1) do
+            if VM:IsDescendantOf(workspace) or VM:IsDescendantOf(Players) then
+                Part.CFrame = Character.HumanoidRootPart.CFrame
+            else
+                break
+            end
+        end
+    end)
+end
+
+CreateVM()
+
+Player.CharacterAdded:Connect(function()
+    Character = Player.Character or Player.CharacterAdded:Wait()
+    wait(1)
+    CreateVM()
+end)
