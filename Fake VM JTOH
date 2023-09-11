@@ -87,7 +87,7 @@ function CreateVM()
         Velocity.Parent = nil
         Gyro.Parent = nil
         Track:Stop()
-        Sound:Stop()
+        Sound:Pause()
     end)
     VM.Equipped:Connect(function()
         if Humanoid.Health > 0 then
