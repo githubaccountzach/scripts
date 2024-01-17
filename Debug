@@ -1,3 +1,8 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local Player = Players.LocalPlayer
+
 local Debug = Instance.new("ScreenGui", RunService:IsStudio() and Player.PlayerGui or game.CoreGui)
 
 local Console = Instance.new("Frame", Debug)
