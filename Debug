@@ -1,0 +1,33 @@
+local Debug = Instance.new("ScreenGui", RunService:IsStudio() and Player.PlayerGui or game.CoreGui)
+
+local Console = Instance.new("Frame", Debug)
+
+local Title = Instance.new("TextLabel", Console)
+local Output = Instance.new("ScrollingFrame", Console)
+
+local UIListLayout = Instance.new("UIListLayout", Output)
+local Template = Instance.new("TextLabel", Output)
+
+SetProperties(Debug, {Name = "Debug"})
+SetProperties(Console, {Name = "Console", Size = UDim2.new(0.278, 0, 0.338, 0), Position = UDim2.new(0.706, 0, 0.648, 0), BackgroundColor3 = Color3.fromRGB(71, 71, 71), BackgroundTransparency = 0.7})
+SetProperties(Title, {Name = "Title", Size = UDim2.new(1, 0, 0.125, 0), Text = "Debugging", TextSize = 18, Font = Enum.Font.Arial, BackgroundColor3 = Color3.fromRGB(71, 71, 71), BorderSizePixel = 1})
+SetProperties(Output, {Name = "Output", Size = UDim2.new(1, 0, 0.875, 0), Position = UDim2.new(0, 0, 0.125, 0), CanvasSize = UDim2.new(0, 0, 100, 0), BackgroundTransparency = 1})
+SetProperties(Template, {Name = "Template", BackgroundTransparency = 1, Size = UDim2.new(0.955, 0, 0.004, 0), Text = "Test", Visible = false})
+
+Mouse.KeyDown:Connect(function(Key)
+	if Key:lower() == "e" then
+		Console.Visible = not Console.Visible
+	end
+end)
+
+hookfunction(print, newcclosure(function(Text)
+	CreateOutput(Output, Template, Text, Color3.fromRGB(255, 255, 255))
+end))
+
+hookfunction(warn, newcclosure(function(Text)
+	CreateOutput(Output, Template, Text, Color3.fromRGB(255, 255, 0))
+end))
+
+hookfunction(error, newcclosure(function(Text)
+	CreateOutput(Output, Template, Text, Color3.fromRGB(255, 0, 0))
+end))
