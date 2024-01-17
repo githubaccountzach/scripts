@@ -8,6 +8,12 @@ local Output = Instance.new("ScrollingFrame", Console)
 local UIListLayout = Instance.new("UIListLayout", Output)
 local Template = Instance.new("TextLabel", Output)
 
+function SetProperties(Object, Properties)
+	for i, v in pairs(Properties) do
+		Object[i] = v
+	end
+end
+
 SetProperties(Debug, {Name = "Debug"})
 SetProperties(Console, {Name = "Console", Size = UDim2.new(0.278, 0, 0.338, 0), Position = UDim2.new(0.706, 0, 0.648, 0), BackgroundColor3 = Color3.fromRGB(71, 71, 71), BackgroundTransparency = 0.7})
 SetProperties(Title, {Name = "Title", Size = UDim2.new(1, 0, 0.125, 0), Text = "Debugging", TextSize = 18, Font = Enum.Font.Arial, BackgroundColor3 = Color3.fromRGB(71, 71, 71), BorderSizePixel = 1})
